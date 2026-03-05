@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Posts tagged #<%= tag.name %>">
+  <title>#<%= tag.name %> — The Inkwell Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('layouts/nav') %>
+
+  <main>
+    <header class="tag-header">
+      <div class="container">
+        <a href="/" class="back-link">← All writing</a>
+        <h1 class="tag-page-title"><span class="tag-hash">#</span><%= tag.name %></h1>
+        <p class="tag-page-count"><%= total %> <%= total === 1 ? 'piece' : 'pieces' %></p>
+      </div>
+    </header>
+
+    <!-- TAG FILTER BAR -->
+    <section class="tag-bar">
+      <div class="container">
+        <a href="/" class="tag-pill">All</a>
+        <% tags.forEach(t => { %>
+          <a href="/tag/<%= t.slug %>" class="tag-pill <%= t.slug === tag.slug ? 'tag-pill--active' : '' %>">
+            #<%= t.name %>
+            <span class="tag-count"><%= t.post_count %></span>
+          </a>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="posts-section">
+      <div class="container">
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">
+            <p class="empty-icon">✦</p>
+            <p>No published posts with this tag yet.</p>
+          </div>
+        <% } else { %>
+          <div class="posts-grid">
+            <% posts.forEach((post, i) => { %>
+              <article class="post-card">
+                <% if (post.cover_image) { %>
+                  <a href="/blog/<%= post.slug %>" class="post-card-img-link" tabindex="-1" aria-hidden="true">
+                    <div class="post-card-img" style="background-image: url('<%= post.cover_image %>')"></div>
+                  </a>
+                <% } %>
+                <div class="post-card-body">
+                  <% if (post.tags && post.tags.length) { %>
+                    <div class="post-card-tags">
+                      <% post.tags.slice(0, 3).forEach(t => { %>
+                        <a href="/tag/<%= t.slug %>" class="post-tag">#<%= t.name %></a>
+                      <% }) %>
+                    </div>
+                  <% } %>
+                  <h2 class="post-card-title">
+                    <a href="/blog/<%= post.slug %>"><%= post.title %></a>
+                  </h2>
+                  <% if (post.excerpt) { %>
+                    <p class="post-card-excerpt"><%= post.excerpt %></p>
+                  <% } %>
+                  <div class="post-card-meta">
+                    <time datetime="<%= post.published_at %>">
+                      <%= new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                    </time>
+                    <span class="post-meta-sep">·</span>
+                    <span><%= post.views %> views</span>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+
+          <% if (totalPages > 1) { %>
+            <nav class="pagination">
+              <% if (page > 1) { %><a href="?page=<%= page - 1 %>" class="pag-btn">← Newer</a><% } %>
+              <span class="pag-info">Page <%= page %> of <%= totalPages %></span>
+              <% if (page < totalPages) { %><a href="?page=<%= page + 1 %>" class="pag-btn">Older →</a><% } %>
+            </nav>
+          <% } %>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+  <%- include('layouts/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

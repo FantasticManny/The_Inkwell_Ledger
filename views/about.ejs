@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — The Inkwell Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('layouts/nav') %>
+  <main>
+    <section class="about-section">
+      <div class="container container--narrow">
+        <p class="about-label">About this place</p>
+        <h1 class="about-title">The Inkwell Ledger</h1>
+        <div class="about-body prose">
+          <p>This is a personal blog built as a portfolio project demonstrating full-stack web development with Node.js, Express, PostgreSQL, EJS, and React.</p>
+          <p>The stack is deliberately close to the metal — raw SQL, hand-written middleware, server-rendered EJS for public pages, and a React-powered CMS admin panel.</p>
+          <h2>The Stack</h2>
+          <ul>
+            <li><strong>Node.js + Express</strong> — HTTP server and routing</li>
+            <li><strong>PostgreSQL</strong> — relational database with raw SQL queries</li>
+            <li><strong>EJS</strong> — server-side rendered templates for public pages</li>
+            <li><strong>React + Tiptap</strong> — rich text editor in the admin CMS</li>
+            <li><strong>OAuth 2.0</strong> — Google & GitHub sign-in via Passport.js</li>
+            <li><strong>Cloudinary</strong> — image upload and CDN delivery</li>
+          </ul>
+          <h2>Features</h2>
+          <ul>
+            <li>Full CRUD for posts, tags, and comments</li>
+            <li>Draft / Published / Archived publishing workflow</li>
+            <li>Comment moderation queue</li>
+            <li>Role-based access control (admin vs. reader)</li>
+            <li>Parameterized SQL queries (no ORM, no injection)</li>
+            <li>Session persistence in PostgreSQL</li>
+          </ul>
+        </div>
+        <a href="/" class="btn btn--primary" style="margin-top:2rem;">Read the writing →</a>
+      </div>
+    </section>
+  </main>
+  <%- include('layouts/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

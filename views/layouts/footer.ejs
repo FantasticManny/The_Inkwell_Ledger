@@ -1,0 +1,18 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">The Inkwell Ledger</a>
+      <p>A place for ideas, observations,<br>and the occasional tangent.</p>
+    </div>
+    <nav class="footer-nav">
+      <a href="/">Writing</a>
+      <a href="/about">About</a>
+      <% if (typeof tags !== 'undefined' && tags.length) { %>
+        <% tags.slice(0, 5).forEach(tag => { %>
+          <a href="/tag/<%= tag.slug %>">#<%= tag.name %></a>
+        <% }) %>
+      <% } %>
+    </nav>
+    <p class="footer-copy">&copy; <%= new Date().getFullYear() %> The Inkwell Ledger</p>
+  </div>
+</footer>

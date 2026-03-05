@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A personal blog about ideas, technology, and writing.">
+  <title>The Inkwell Ledger — Writing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('layouts/nav') %>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Est. <%= new Date().getFullYear() %></p>
+        <h1 class="hero-title">The Inkwell Ledger</h1>
+        <p class="hero-sub">Writing on technology, craft, and the spaces in between.</p>
+      </div>
+      <div class="hero-ticker">
+        <span><%= total %> published pieces</span>
+        <span aria-hidden="true">·</span>
+        <span>Ideas worth keeping</span>
+        <span aria-hidden="true">·</span>
+        <span>Written with care</span>
+      </div>
+    </section>
+
+    <!-- TAG FILTER -->
+    <% if (tags.length) { %>
+    <section class="tag-bar">
+      <div class="container">
+        <a href="/" class="tag-pill <%= currentPath === '/' && !req.query.tag ? 'tag-pill--active' : '' %>">All</a>
+        <% tags.forEach(tag => { %>
+          <a href="/tag/<%= tag.slug %>" class="tag-pill">
+            #<%= tag.name %>
+            <span class="tag-count"><%= tag.post_count %></span>
+          </a>
+        <% }) %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- POST GRID -->
+    <section class="posts-section">
+      <div class="container">
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">
+            <p class="empty-icon">✦</p>
+            <p>No posts yet. Check back soon.</p>
+          </div>
+        <% } else { %>
+          <div class="posts-grid">
+            <% posts.forEach((post, i) => { %>
+              <article class="post-card <%= i === 0 ? 'post-card--featured' : '' %>">
+                <% if (post.cover_image) { %>
+                  <a href="/blog/<%= post.slug %>" class="post-card-img-link" tabindex="-1" aria-hidden="true">
+                    <div class="post-card-img" style="background-image: url('<%= post.cover_image %>')"></div>
+                  </a>
+                <% } %>
+                <div class="post-card-body">
+                  <% if (post.tags && post.tags.length) { %>
+                    <div class="post-card-tags">
+                      <% post.tags.slice(0, 3).forEach(tag => { %>
+                        <a href="/tag/<%= tag.slug %>" class="post-tag">#<%= tag.name %></a>
+                      <% }) %>
+                    </div>
+                  <% } %>
+                  <h2 class="post-card-title">
+                    <a href="/blog/<%= post.slug %>"><%= post.title %></a>
+                  </h2>
+                  <% if (post.excerpt) { %>
+                    <p class="post-card-excerpt"><%= post.excerpt %></p>
+                  <% } %>
+                  <div class="post-card-meta">
+                    <% if (post.author_avatar) { %>
+                      <img src="<%= post.author_avatar %>" alt="<%= post.author_name %>" class="post-meta-avatar">
+                    <% } %>
+                    <span class="post-meta-author"><%= post.author_name %></span>
+                    <span class="post-meta-sep">·</span>
+                    <time datetime="<%= post.published_at %>">
+                      <%= new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                    </time>
+                    <span class="post-meta-sep">·</span>
+                    <span><%= post.views %> views</span>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+
+          <!-- PAGINATION -->
+          <% if (totalPages > 1) { %>
+            <nav class="pagination" aria-label="Page navigation">
+              <% if (page > 1) { %>
+                <a href="?page=<%= page - 1 %>" class="pag-btn">← Newer</a>
+              <% } %>
+              <span class="pag-info">Page <%= page %> of <%= totalPages %></span>
+              <% if (page < totalPages) { %>
+                <a href="?page=<%= page + 1 %>" class="pag-btn">Older →</a>
+              <% } %>
+            </nav>
+          <% } %>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+  <%- include('layouts/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

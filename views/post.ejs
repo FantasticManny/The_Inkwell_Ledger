@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="<%= post.excerpt || post.title %>">
+  <meta property="og:title" content="<%= post.title %> — The Inkwell Ledger">
+  <meta property="og:description" content="<%= post.excerpt || '' %>">
+  <% if (post.cover_image) { %><meta property="og:image" content="<%= post.cover_image %>"><% } %>
+  <title><%= post.title %> — The Inkwell Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="post-page">
+  <%- include('layouts/nav') %>
+
+  <main>
+    <!-- POST HEADER -->
+    <header class="post-header">
+      <div class="container container--narrow">
+        <% if (post.tags && post.tags.length) { %>
+          <div class="post-header-tags">
+            <% post.tags.forEach(tag => { %>
+              <a href="/tag/<%= tag.slug %>" class="post-tag">#<%= tag.name %></a>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <h1 class="post-title"><%= post.title %></h1>
+        <% if (post.excerpt) { %>
+          <p class="post-lede"><%= post.excerpt %></p>
+        <% } %>
+
+        <div class="post-byline">
+          <% if (post.author_avatar) { %>
+            <img src="<%= post.author_avatar %>" alt="<%= post.author_name %>" class="byline-avatar">
+          <% } %>
+          <div class="byline-info">
+            <span class="byline-name"><%= post.author_name %></span>
+            <div class="byline-meta">
+              <time datetime="<%= post.published_at %>">
+                <%= new Date(post.published_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+              </time>
+              <span>·</span>
+              <span><%= readingTime %> min read</span>
+              <span>·</span>
+              <span><%= post.views %> views</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if (post.cover_image) { %>
+        <div class="post-cover">
+          <img src="<%= post.cover_image %>" alt="<%= post.title %>" loading="lazy">
+        </div>
+      <% } %>
+    </header>
+
+    <!-- POST BODY -->
+    <div class="post-body">
+      <div class="container container--narrow">
+        <div class="prose">
+          <%- post.content_html || '<p><em>No content yet.</em></p>' %>
+        </div>
+
+        <!-- SHARE -->
+        <div class="post-share">
+          <span>Share</span>
+          <a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(post.title) %>&url=<%= encodeURIComponent(appUrl + '/blog/' + post.slug) %>" target="_blank" rel="noopener" class="share-btn">Twitter</a>
+          <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href).then(() => this.textContent = 'Copied!')" id="copyLink">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMENTS -->
+    <section class="comments-section" id="comments">
+      <div class="container container--narrow">
+        <h2 class="comments-title">
+          Discussion
+          <% if (comments.length) { %><span class="comments-count"><%= comments.length %></span><% } %>
+        </h2>
+
+        <% if (comments.length === 0) { %>
+          <p class="comments-empty">Be the first to share your thoughts.</p>
+        <% } else { %>
+          <div class="comments-list">
+            <% comments.forEach(comment => { %>
+              <div class="comment">
+                <div class="comment-header">
+                  <% if (comment.author_avatar) { %>
+                    <img src="<%= comment.author_avatar %>" alt="" class="comment-avatar">
+                  <% } else { %>
+                    <div class="comment-avatar comment-avatar--placeholder">
+                      <%= comment.author_name.charAt(0).toUpperCase() %>
+                    </div>
+                  <% } %>
+                  <div>
+                    <span class="comment-author"><%= comment.author_name %></span>
+                    <time class="comment-time" datetime="<%= comment.created_at %>">
+                      <%= new Date(comment.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                    </time>
+                  </div>
+                </div>
+                <p class="comment-body"><%= comment.body %></p>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <!-- COMMENT FORM -->
+        <% if (typeof user !== 'undefined' && user) { %>
+          <form class="comment-form" action="/blog/<%= post.slug %>/comment" method="POST" id="commentForm">
+            <h3 class="comment-form-title">Leave a comment</h3>
+            <% if (errors && errors.length) { %>
+              <div class="form-errors">
+                <% errors.forEach(err => { %><p>⚠ <%= err.msg %></p><% }) %>
+              </div>
+            <% } %>
+            <div class="form-group">
+              <label for="body" class="sr-only">Your comment</label>
+              <textarea
+                id="body"
+                name="body"
+                class="form-textarea"
+                placeholder="Share your thoughts…"
+                rows="4"
+                maxlength="2000"
+                required
+              ><%= (typeof formData !== 'undefined' && formData.body) ? formData.body : '' %></textarea>
+              <span class="char-count" id="charCount">0 / 2000</span>
+            </div>
+            <button type="submit" class="btn btn--primary">Post comment</button>
+            <p class="comment-note">Comments are reviewed before appearing.</p>
+          </form>
+        <% } else { %>
+          <div class="comment-cta">
+            <p>Sign in to join the discussion.</p>
+            <a href="/login?redirect=/blog/<%= post.slug %>#comments" class="btn btn--primary">Sign in</a>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+  <%- include('layouts/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

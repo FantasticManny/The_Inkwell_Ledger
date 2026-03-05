@@ -1,0 +1,27 @@
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">The Inkwell Ledger</a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="<%= typeof currentPath !== 'undefined' && currentPath === '/' ? 'active' : '' %>">Writing</a></li>
+      <li><a href="/about" class="<%= typeof currentPath !== 'undefined' && currentPath === '/about' ? 'active' : '' %>">About</a></li>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <% if (user.role === 'admin') { %>
+          <li><a href="/admin" class="nav-cms">CMS ↗</a></li>
+        <% } %>
+        <li class="nav-user">
+          <% if (user.avatar_url) { %>
+            <img src="<%= user.avatar_url %>" alt="" class="nav-avatar" aria-hidden="true">
+          <% } %>
+          <a href="/auth/logout" class="nav-logout">Sign out</a>
+        </li>
+      <% } else { %>
+        <li><a href="/login" class="nav-signin">Sign in</a></li>
+      <% } %>
+    </ul>
+  </div>
+</nav>
