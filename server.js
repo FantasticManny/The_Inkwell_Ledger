@@ -7,10 +7,10 @@ const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
 server.listen(PORT, () => {
-  console.log(`\n  ┌                                         ─┐`);
+  console.log(`\n    ┌                                         ─┐`);
   console.log(`    │  Blog CMS running                        │`);
-  console.log(`    │  http://localhost:${PORT}                │`);
-  console.log(`    │  Admin: http://localhost:${PORT}/admin   │`);
+  console.log(`    │  http://localhost:${PORT}                   │`);
+  console.log(`    │  Admin: http://localhost:${PORT}/admin      │`);
   console.log(`    └                                         ─┘\n`);
 });
 
